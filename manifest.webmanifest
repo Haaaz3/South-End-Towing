@@ -1,0 +1,17 @@
+{
+  "name": "Curbwise — South End parking",
+  "short_name": "Curbwise",
+  "description": "Live curb-side street-cleaning and tow-window guidance for Boston's South End.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f3ed",
+  "theme_color": "#10231f",
+  "icons": [
+    {
+      "src": "./icons/curbwise.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

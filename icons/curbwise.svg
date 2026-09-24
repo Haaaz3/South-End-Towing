@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Curbwise">
+  <rect width="512" height="512" rx="120" fill="#0c7464"/>
+  <path d="M256 86c-76 0-138 61-138 137 0 101 138 203 138 203s138-102 138-203c0-76-62-137-138-137Z" fill="#fffefa"/>
+  <circle cx="256" cy="223" r="57" fill="#0c7464"/>
+  <path d="M230 250h52v-38h-10v-17h-32v17h-10v38Zm14-24v-17h24v17h-24Z" fill="#fffefa"/>
+</svg>
