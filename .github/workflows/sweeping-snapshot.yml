@@ -1,0 +1,27 @@
+name: City sweeping snapshot (one-off)
+on:
+  push:
+    branches: [data/city-sweeping-snapshot]
+permissions:
+  contents: write
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download City of Boston street sweeping schedules
+        run: |
+          set -euo pipefail
+          meta=$(curl -sSfL "https://data.boston.gov/api/3/action/resource_show?id=9fdbdcad-67c8-4b23-b6ec-861e77d56227")
+          url=$(echo "$meta" | python3 -c 'import sys,json;print(json.load(sys.stdin)["result"]["url"])')
+          echo "$meta" | python3 -c 'import sys,json;r=json.load(sys.stdin)["result"];print(r.get("last_modified"),r.get("url"))' > data-snapshot-meta.txt
+          curl -sSfL "$url" -o street-sweeping-schedules.csv
+          wc -l street-sweeping-schedules.csv
+          head -1 street-sweeping-schedules.csv
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add street-sweeping-schedules.csv data-snapshot-meta.txt
+          git commit -m "Snapshot of City of Boston street sweeping schedules"
+          git push
