@@ -3,9 +3,9 @@
    City schedules are still only a planning aid: the sign at the curb wins. */
 
 const BOSTON_TIME_ZONE = "America/New_York";
-// 450 is on the even-numbered Shawmut curb face. Keep the home marker on that
-// curb rather than in the middle of the block or across the street.
-const HOME = { lat: 42.339617, lng: -71.074506, label: "450 Shawmut Ave" };
+// City of Boston SAM address point for 450 Shawmut Ave (even side, between
+// Newland St and Rutland St). The previous value sat ~70 m away at West Newton St.
+const HOME = { lat: 42.339189, lng: -71.074941, label: "450 Shawmut Ave" };
 const COLORS = { clear: "#138b70", soon: "#d4a11e", urgent: "#df741e", active: "#c94b42", ending: "#675bab" };
 const METER_SERVICE = "https://gisportal.boston.gov/arcgis/rest/services/Infrastructure/OpenData/MapServer/9/query";
 const METER_BOUNDS = "-71.083,42.334,-71.066,42.346";
@@ -28,6 +28,31 @@ const ROADS = {
   eastBrookline: [[42.339615,-71.072504],[42.339508,-71.0723758],[42.3389892,-71.0717613],[42.3388607,-71.0716093],[42.3388262,-71.0715652],[42.3385665,-71.0712561],[42.3383857,-71.0710358],[42.3383656,-71.0710113],[42.338317,-71.0709521],[42.3382659,-71.0708916],[42.3369426,-71.0693236],[42.3367618,-71.0691084],[42.3366862,-71.069018]],
   eastBerkeley: [[42.3439571,-71.0659884],[42.3440018,-71.0661266],[42.344045,-71.066254],[42.3440498,-71.0662681],[42.344115,-71.066461],[42.3442546,-71.0668673],[42.3442787,-71.0669423],[42.3442901,-71.0669774],[42.3443169,-71.0670567],[42.3443522,-71.0671597],[42.3446726,-71.0680628],[42.3449906,-71.0689715],[42.3450939,-71.0692731]],
   lenox: [[42.3350615,-71.0787954],[42.3351044,-71.0788516],[42.3351505,-71.0789121],[42.3353574,-71.0792351],[42.3356426,-71.0796497],[42.3358819,-71.0799945],[42.3359029,-71.0800247],[42.335951,-71.0801],[42.3359887,-71.0801546],[42.3361739,-71.0804229],[42.336605,-71.0810476],[42.3375745,-71.0824526],[42.3376944,-71.0826337]]
+};
+
+// Which side of each ROADS path (in the direction its points are listed) the
+// EVEN-numbered addresses are on: +1 = left, -1 = right. This must be set per
+// road from real address data — path direction is arbitrary, so it cannot be
+// assumed. Verified against City of Boston SAM address points on 2026-10-01;
+// re-run `node tools/check-sides.mjs` after editing any path or this table.
+const EVEN_SIDE = {
+  shawmut: 1,
+  rutland: -1,
+  westNewton: -1,
+  westConcord: -1,
+  westDedham: -1,
+  westSpringfield: -1,
+  tremont: 1,
+  washington: 1,
+  hanson: -1,
+  milford: 1,
+  upton: -1,
+  dwight: -1,
+  sanJuan: -1,
+  aguadilla: 1,
+  eastBrookline: 1,
+  eastBerkeley: -1,
+  lenox: 1
 };
 
 function curb(id, street, road, side, segment, schedule, weekdays, ordinals, start, end) {
@@ -199,9 +224,12 @@ function windowCountdown(next) {
 }
 
 // Offset each curb from the real road centerline by roughly a parking-lane width.
-// It keeps the two sides visibly separate while following every turn in the road.
-function offsetPath(path, side) {
-  const offsetMeters = side.startsWith("Even") ? 5.5 : -5.5;
+// Positive offset = left of the path direction. EVEN_SIDE says which side the
+// even-numbered curb is actually on for this particular road.
+function offsetPath(path, side, road) {
+  const evenSide = EVEN_SIDE[road];
+  if (evenSide !== 1 && evenSide !== -1) throw new Error(`No verified EVEN_SIDE for road "${road}"`);
+  const offsetMeters = (side.startsWith("Even") ? 5.5 : -5.5) * evenSide;
   return path.map((point, index) => {
     const previous = path[Math.max(0, index - 1)];
     const following = path[Math.min(path.length - 1, index + 1)];
@@ -251,7 +279,7 @@ function initMap() {
       drawnRoads.add(curbSide.road);
       L.polyline(curbSide.path, { color: "#31544c", weight: 2, opacity: 0.32, interactive: false }).addTo(state.map);
     }
-    const line = L.polyline(offsetPath(curbSide.path, curbSide.side), {
+    const line = L.polyline(offsetPath(curbSide.path, curbSide.side, curbSide.road), {
       className: `curb-line curb-${curbSide.id}`,
       lineCap: "round",
       lineJoin: "round",
