@@ -1,0 +1,59 @@
+main_id,st_name,dist,dist_name,start_time,end_time,side,from,to,miles,section,one_way,week_1,week_2,week_3,week_4,week_5,sunday,monday,tuesday,wednesday,thursday,friday,saturday,every_day,year_round,north_end_pilot,timestamp,parent,losta,hista
+523,Aguadilla St,1S,South End,08:00,12:00,Even,Tremont St,Tremont St,0.176704545454545,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2018-09-24 16:38:59+00,AGUAD1,0,933
+681,East Brookline St,1S,South End,12:00,16:00,Odd,Washington St,Albany St,0.268560606060606,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2023-03-10 13:39:13+00,E BRO2,0,1418
+923,East Brookline St,1S,South End,12:00,16:00,Even,Washington St,Albany St,0.268560606060606,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2023-03-10 13:39:09+00,E BRO2,0,1418
+991,Dwight St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Tremont St,0.146780303030303,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-05-15 16:28:11+00,DWIGH1,0,775
+1029,East Berkeley St,1S,South End,00:01,07:00,,Washington St,Albany St,0.18844696969697,,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,2012-02-29 15:06:53+00,E BER1,1158,2153
+1094,East Berkeley St,1S,South End,00:01,07:00,,Washington St,Albany St,0.18844696969697,,f,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,2012-02-29 15:06:53+00,E BER1,1158,2153
+1247,Hanson St,1S,South End,08:00,12:00,Even,Shawmut Ave,Tremont St,0.131439393939394,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,HANSO1,0,694
+1248,Hanson St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Tremont St,0.131439393939394,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:12:20+00,HANSO1,0,694
+1373,Dwight St,1S,South End,08:00,12:00,Even,Shawmut Ave,Tremont St,0.146780303030303,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,DWIGH1,0,775
+1786,Milford St,1S,South End,08:00,12:00,Even,Shawmut Ave,Tremont St,0.134469696969697,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,MILFO1,0,710
+1787,Milford St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Tremont St,0.134469696969697,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:11:44+00,MILFO1,0,710
+2212,Upton St,1S,South End,08:00,12:00,Even,Shawmut Ave,Tremont St,0.135227272727273,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,UPTON1,0,714
+2242,Tremont St,1S,South End,05:00,07:00,Odd,Berkeley St,Massachusetts Ave,0.685606060606061,,f,t,t,t,t,t,f,t,f,f,f,f,f,f,t,t,2012-02-29 15:06:53+00,TREMO1,6230,9850
+2248,Rutland St,1S,South End,08:00,12:00,Even,Washington St,Newland St,0.101515151515152,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2016-03-02 14:14:23+00,RUTLA3,0,536
+2249,Rutland St,1S,South End,08:00,12:00,Even,Shawmut Ave,Tremont St,0.160416666666667,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,RUTLA3,389,1236
+2250,Rutland St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Tremont St,0.160416666666667,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:16:53+00,RUTLA3,389,1236
+2251,Rutland St,1S,South End,08:00,12:00,Even,Washington St,Shawmut Ave,0.0736742424242424,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,RUTLA3,0,389
+2252,Rutland St,1S,South End,08:00,12:00,Odd,Washington St,Shawmut Ave,0.0736742424242424,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:17:00+00,RUTLA3,0,389
+2266,San Juan St,1S,South End,08:00,12:00,Even,Shawmut Ave,Shawmut Ave,0.203219696969697,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,SAN J1,0,1073
+2267,San Juan St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Shawmut Ave,0.203219696969697,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:16:23+00,SAN J1,0,1073
+2325,Shawmut Ave,1S,South End,08:00,12:00,Odd,Herald St,East Berkeley St,0.188257575757576,,f,t,t,t,t,t,f,f,f,f,f,t,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,634,1628
+2326,Shawmut Ave,1S,South End,12:00,16:00,Even,Herald St,East Berkeley St,0.188257575757576,,f,t,t,t,t,t,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,634,1628
+2327,Shawmut Ave,1S,South End,12:00,16:00,Even,East Berkeley St,West Dedham St,0.330681818181818,,f,t,t,t,t,t,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,1628,3374
+2328,Shawmut Ave,1S,South End,08:00,12:00,Odd,East Berkeley St,West Dedham St,0.330681818181818,,f,t,t,t,t,t,f,f,f,f,f,t,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,1628,3374
+2329,Shawmut Ave,1S,South End,08:00,12:00,Even,Massachusetts Ave,Lenox St,0.140340909090909,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,5558,6299
+2330,Shawmut Ave,1S,South End,08:00,12:00,Odd,West Dedham St,Massachusetts Ave,0.413636363636364,,f,t,t,t,t,t,f,f,f,f,f,t,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,3374,5558
+2331,Shawmut Ave,1S,South End,12:00,16:00,Even,West Dedham St,Massachusetts Ave,0.413636363636364,,f,t,t,t,t,t,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,3374,5558
+2332,Shawmut Ave,1S,South End,08:00,12:00,Odd,Massachusetts Ave,Lenox St,0.140340909090909,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,SHAWM2,5558,6299
+2442,Tremont St,1S,South End,05:00,07:00,Odd Side Median,Arlington St,Dartmouth St,0.429734848484849,,f,t,t,t,t,t,f,f,f,t,f,f,f,f,t,t,2012-02-14 13:36:32+00,TREMO1,5356,7625
+2469,Aguadilla St,1S,South End,08:00,12:00,Odd,Tremont St,Tremont St,0.176704545454545,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:13:50+00,AGUAD1,0,933
+2549,Upton St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Tremont St,0.135227272727273,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:09:36+00,UPTON1,0,714
+2686,Washington St,1S,South End,00:00,07:00,Even,East Berkeley St,Massachusetts Ave,0.777272727272727,,f,t,t,t,t,t,f,f,t,f,f,f,f,f,t,t,2017-03-20 12:53:49+00,WASHI1,6000,10104
+2687,Washington St,1S,South End,00:01,07:00,,Marginal Rd,East Berkeley St,0.24905303030303,,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,t,2012-02-29 15:06:53+00,WASHI1,4685,6000
+2742,West Newton St,1S,South End,08:00,12:00,Even,SW Corridor Path,Columbus Ave,0.127651515151515,,f,t,t,t,t,t,f,f,f,t,f,f,f,f,f,t,2022-03-09 14:31:11+00,WEST 18,2600,3274
+2743,West Newton St,1S,South End,08:00,12:00,Odd,Tremont St,Columbus Ave,0.163636363636364,,f,t,f,t,f,t,f,f,f,t,f,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 18,1203,2067
+2744,West Newton St,1S,South End,08:00,12:00,Odd,SW Corridor Path,Columbus Ave,0.127651515151515,,f,t,t,t,t,t,f,f,f,f,f,t,f,f,f,t,2022-03-09 14:31:05+00,WEST 18,2600,3274
+2745,West Newton St,1S,South End,08:00,12:00,Even,Shawmut Ave,Tremont St,0.154545454545455,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 18,387,1203
+2746,West Newton St,1S,South End,08:00,12:00,Even,Washington St,Shawmut Ave,0.0732954545454545,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 18,0,387
+2747,West Newton St,1S,South End,08:00,12:00,Even,Tremont St,Columbus Ave,0.163636363636364,,f,f,t,f,t,f,f,f,f,t,f,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 18,1203,2067
+2748,West Newton St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Tremont St,0.154545454545455,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:16:01+00,WEST 18,387,1203
+2764,West Springfield St,1S,South End,08:00,12:00,Even,Tremont St,Columbus Ave,0.12405303030303,,f,f,t,f,t,f,f,f,f,t,f,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 29,1329,1984
+2765,West Springfield St,1S,South End,08:00,12:00,Odd,Tremont St,Columbus Ave,0.12405303030303,,f,t,f,t,f,t,f,f,f,t,f,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 29,1329,1984
+2766,West Springfield St,1S,South End,08:00,12:00,Even,Washington St,Tremont St,0.251704545454545,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 29,0,1329
+2767,West Springfield St,1S,South End,08:00,12:00,Odd,Washington St,Tremont St,0.251704545454545,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:19:23+00,WEST 29,0,1329
+2785,West Concord St,1S,South End,08:00,12:00,Even,Shawmut Ave,Tremont St,0.165340909090909,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 6,396,1269
+2786,West Concord St,1S,South End,08:00,12:00,Odd,Shawmut Ave,Tremont St,0.165340909090909,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:18:50+00,WEST 6,396,1269
+2788,West Concord St,1S,South End,08:00,12:00,Even,Washington St,Shawmut Ave,0.075,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 6,0,396
+2789,West Concord St,1S,South End,08:00,12:00,Odd,Washington St,Shawmut Ave,0.075,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:18:41+00,WEST 6,0,396
+2790,West Dedham St,1S,South End,08:00,12:00,Odd,Washington St,Tremont St,0.215909090909091,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:13:31+00,WEST 8,0,1140
+2791,West Dedham St,1S,South End,08:00,12:00,Even,Washington St,Tremont St,0.215909090909091,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2012-02-14 13:36:32+00,WEST 8,0,1140
+2929,Tremont St,1S,South End,05:00,07:00,Even Side Median,Arlington St,Dartmouth St,0.429734848484849,,f,t,t,t,t,t,f,f,f,f,t,f,f,f,t,t,2021-05-26 12:23:56+00,TREMO1,5356,7625
+3052,Washington St,1S,South End,00:01,07:00,Even,Massachusetts Ave,Lenox St,0.132765151515152,,t,t,t,t,t,t,f,f,t,f,f,f,f,f,t,t,2012-02-29 15:06:53+00,WASHI1,10104,10805
+3053,Washington St,1S,South End,00:01,07:00,Odd,Massachusetts Ave,Lenox St,0.132765151515152,,t,t,t,t,t,t,f,f,f,t,f,f,f,f,t,t,2012-02-29 15:06:53+00,WASHI1,10104,10805
+3217,Tremont St,1S,South End,05:00,07:00,Even,Berkeley St,Massachusetts Ave,0.685606060606061,,f,t,t,t,t,t,f,f,f,f,t,f,f,f,t,t,2015-04-16 15:50:37+00,TREMO1,6230,9850
+3249,West Newton St,1S,South End,08:00,12:00,Odd,Washington St,Shawmut Ave,0.73,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-08-20 12:15:52+00,WEST 18,0,387
+3676,Washington St,1S,South End,00:00,07:00,Odd,East Berkeley St,Massachusetts Ave,0.777272727272,,f,t,t,t,t,t,f,f,f,t,f,f,f,f,t,t,2024-06-05 11:00:05+00,WASHI1,6000,10104
+3779,Lenox St,1S,South End,08:00,12:00,Even,Washington St,Tremont St,0.28977272727,,f,f,t,f,t,f,f,f,f,f,t,f,f,f,f,t,2020-03-24 17:22:51+00,LENOX1,0,1530
+3780,Lenox St,1S,South End,08:00,12:00,Odd,Washington St,Tremont St,0.28977272727,,f,t,f,t,f,t,f,f,f,f,t,f,f,f,f,t,2020-03-24 17:24:01+00,LENOX1,0,1530
