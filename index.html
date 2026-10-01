@@ -10,6 +10,7 @@
     <title>Curbwise — South End parking</title>
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./icons/curbwise.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icons/curbwise-180.png" />
     <link rel="preconnect" href="https://unpkg.com" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -50,10 +51,51 @@
             <span><i class="legend-line ending" aria-hidden="true"></i> Parking opens within 1 hour</span>
             <label class="meter-toggle"><input id="meter-toggle" type="checkbox" /> <i class="legend-dot meter" aria-hidden="true"></i> City 2-hour meters</label>
           </div>
+          <button id="map-car-button" class="map-car-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11l1.6-4.2A2 2 0 0 1 8.5 5.5h7a2 2 0 0 1 1.9 1.3L19 11m-14 0h14m-14 0a2 2 0 0 0-2 2v3h2m14-5a2 2 0 0 1 2 2v3h-2M5 16v2m14-2v2M5 16h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="map-car-label">Mark my car</span>
+          </button>
           <div id="location-summary" class="home-bubble"><span aria-hidden="true">⌂</span> Finding your location…</div>
         </section>
 
         <aside class="side-panel" aria-label="Parking rule details">
+          <section id="car-card" class="car-card" aria-live="polite">
+            <div class="car-card-heading">
+              <p class="eyebrow">Your car</p>
+            </div>
+            <div id="car-empty">
+              <p class="car-lead">Mark where you parked. Curbwise shows that curb's next tow window and can send you a push alert before it starts.</p>
+              <button id="car-mark-button" class="button button-primary" type="button">Mark my car</button>
+            </div>
+            <div id="car-placing" hidden>
+              <p class="car-lead"><strong>Drag the car pin onto the curb you parked on</strong>, or tap the map. Zoom in so the pin sits on the correct side of the street.</p>
+              <div class="car-actions">
+                <button id="car-park-button" class="button button-primary" type="button">Park here</button>
+                <button id="car-cancel-button" class="button button-secondary" type="button">Cancel</button>
+              </div>
+            </div>
+            <div id="car-parked" hidden>
+              <h2 id="car-street">Rutland St · odd-numbered side</h2>
+              <p id="car-segment" class="segment"></p>
+              <div id="car-warning" class="car-warning" hidden></div>
+              <div id="car-status" class="status-row status-clear"></div>
+              <div class="next-window">
+                <span class="next-label">Next tow window for your car</span>
+                <strong id="car-next"></strong>
+                <span id="car-countdown" class="countdown"></span>
+              </div>
+              <p class="car-side-check">Check the side: <button id="car-switch-button" class="link-button" type="button">switch to the other side</button> if the pin guessed wrong.</p>
+              <div class="car-alerts">
+                <p id="car-alert-text" class="car-alert-text"></p>
+                <button id="car-alert-button" class="button button-primary" type="button">Turn on tow alerts</button>
+              </div>
+              <div class="car-actions">
+                <button id="car-move-button" class="button button-secondary" type="button">Move pin</button>
+                <button id="car-clear-button" class="button button-secondary" type="button">I moved my car</button>
+              </div>
+            </div>
+          </section>
+
           <section class="time-card">
             <div class="time-card-heading">
               <div>
