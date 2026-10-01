@@ -12,6 +12,12 @@ The status is recalculated from the Boston date and time each minute (or from th
 
 Which physical curb is odd- or even-numbered is set per street in `EVEN_SIDE` in `app.js`, verified against City of Boston address points (SAM) on Oct 1, 2026. It can't be inferred from the line direction, which is arbitrary. Before that fix, 10 of the 17 streets had odd and even painted on the wrong curbs: Rutland, W Newton, W Concord, W Dedham, W Springfield, Hanson, Upton, Dwight, San Juan and E Berkeley.
 
+## Schedules (verified)
+
+Each curb lists the City of Boston street-sweeping rows it represents (`cityRows`, the City's `main_id`). `tools/city_sweeping_south_end.csv` is the City's own data for these streets, from the data.boston.gov "Street Sweeping Schedules" file last modified Oct 1, 2026. `node tools/check-schedules.mjs` checks every curb against its rows: day of week, which weeks, start/end time, and year-round vs. Mar 1–Dec 31. It also confirms that every City row on these streets is either drawn or deliberately left off.
+
+The schedule text shown in the app is generated from the same fields the tow logic uses.
+
 Run `node tools/check-sides.mjs` after any change to road geometry, `EVEN_SIDE`, or schedules. It runs the real `app.js` and checks:
 
 - that every verified address in `tools/city_addresses.json` sits beside the curb line of its own parity
@@ -19,7 +25,7 @@ Run `node tools/check-sides.mjs` after any change to road geometry, `EVEN_SIDE`,
 
 ## Data and safety
 
-Schedules are seeded from the City of Boston Street Sweeping Lookup, checked September 2026. Blue dots are live from the City's public parking-meter data and only show active spaces whose published policy specifies a 120-minute maximum. They are deliberately separate from the colored street-cleaning curbs: a meter is not a resident-parking designation. On a public HTTPS site, the app asks each visitor's phone for location permission on first open, then places their own live blue position marker. Coordinates are used only in that browser and are never sent to or stored by this app. The app intentionally keeps an always-visible notice that posted signs take precedence: temporary permits, holidays, weather, construction, snow emergencies, and resident-permit rules can change whether a spot is actually legal.
+Schedules come from the City of Boston Street Sweeping Schedules data (data.boston.gov), checked against it on Oct 1, 2026. Blue dots are live from the City's public parking-meter data and only show active spaces whose published policy specifies a 120-minute maximum. They are deliberately separate from the colored street-cleaning curbs: a meter is not a resident-parking designation. On a public HTTPS site, the app asks each visitor's phone for location permission on first open, then places their own live blue position marker. Coordinates are used only in that browser and are never sent to or stored by this app. The app intentionally keeps an always-visible notice that posted signs take precedence: temporary permits, holidays, weather, construction, snow emergencies, and resident-permit rules can change whether a spot is actually legal.
 
 ## Publish for phones
 

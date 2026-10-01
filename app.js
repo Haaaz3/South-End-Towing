@@ -11,13 +11,15 @@ const METER_SERVICE = "https://gisportal.boston.gov/arcgis/rest/services/Infrast
 const METER_BOUNDS = "-71.083,42.334,-71.066,42.346";
 
 const ROADS = {
-  shawmut: [[42.3413062,-71.0720464],[42.340841,-71.072751],[42.340396,-71.073434],[42.340031,-71.0739954],[42.3396564,-71.0745554],[42.3392022,-71.0752325],[42.338733,-71.0759462],[42.3382851,-71.0766383],[42.3378268,-71.0773394],[42.3374337,-71.0779331],[42.3369055,-71.0787192]],
+  shawmut: [[42.3413062,-71.0720464],[42.340841,-71.072751],[42.340396,-71.073434],[42.340031,-71.0739954],[42.3396564,-71.0745554],[42.3392022,-71.0752325],[42.338733,-71.0759462],[42.3382851,-71.0766383],[42.3378268,-71.0773394],[42.3374337,-71.0779331],[42.337395,-71.078001]],
+  shawmutPastMassAve: [[42.337342,-71.078075],[42.3369055,-71.0787192]],
   rutland: [[42.3409305,-71.0772985],[42.3406208,-71.0769471],[42.339484,-71.075594],[42.3392022,-71.0752325],[42.3388806,-71.0748595],[42.338421,-71.074288]],
   westNewton: [[42.3413374,-71.0765562],[42.3410903,-71.0762631],[42.340536,-71.0756083],[42.3396564,-71.0745554],[42.3389758,-71.0737589],[42.338869,-71.07363]],
   westConcord: [[42.3405218,-71.0780724],[42.340161,-71.0776465],[42.339024,-71.076287],[42.338733,-71.0759462],[42.3384155,-71.0755682],[42.3379292,-71.0749632]],
   westDedham: [[42.3428273,-71.0737716],[42.3424408,-71.0734069],[42.3418803,-71.0727358],[42.3413062,-71.0720464],[42.340945,-71.0712588]],
-  westSpringfield: [[42.3411093,-71.0811064],[42.3406319,-71.0804911],[42.3400026,-71.0799018],[42.339709,-71.079595],[42.3389519,-71.078708],[42.3378268,-71.0773394],[42.33697,-71.076316]],
-  tremont: [[42.3428273,-71.0737716],[42.3423618,-71.0746575],[42.3416674,-71.0759418],[42.3409305,-71.0772985],[42.3401191,-71.0788195],[42.3396152,-71.0797761],[42.3389363,-71.0809535],[42.3384275,-71.0819867]],
+  westSpringfieldColumbus: [[42.3411093,-71.0811064],[42.3406319,-71.0804911],[42.3400026,-71.0799018],[42.339709,-71.079595]],
+  westSpringfield: [[42.339709,-71.079595],[42.3389519,-71.078708],[42.3378268,-71.0773394],[42.33697,-71.076316]],
+  tremont: [[42.3428273,-71.0737716],[42.3423618,-71.0746575],[42.3416674,-71.0759418],[42.3409305,-71.0772985],[42.3401191,-71.0788195],[42.3396152,-71.0797761],[42.33931,-71.08040]],
   washington: [[42.339615,-71.072504],[42.3395403,-71.0726066],[42.338869,-71.07363],[42.33864,-71.0739634],[42.338421,-71.074288],[42.3379292,-71.0749632],[42.337459,-71.075647],[42.33697,-71.076316]],
   hanson: [[42.3442865,-71.0710541],[42.3441935,-71.07096],[42.3441502,-71.0709204],[42.3433269,-71.069646],[42.3432793,-71.0695766],[42.3431865,-71.0694355],[42.343054,-71.0692339],[42.3429909,-71.0691374]],
   milford: [[42.3433976,-71.0684339],[42.3434626,-71.0685244],[42.3435463,-71.0686586],[42.343605,-71.0687757],[42.343722,-71.0690218],[42.3441705,-71.069885],[42.3444413,-71.0704362],[42.3444597,-71.0704607],[42.3444952,-71.0705067],[42.3445456,-71.0705715]],
@@ -26,7 +28,7 @@ const ROADS = {
   sanJuan: [[42.340841,-71.072751],[42.3409044,-71.0728259],[42.341133,-71.073096],[42.341429,-71.0734074],[42.3414788,-71.0734819],[42.3414887,-71.0735492],[42.3414668,-71.0736348],[42.3414328,-71.0736971],[42.3413091,-71.0738709],[42.3411037,-71.0741654],[42.3410589,-71.074237],[42.3410228,-71.074294],[42.3407511,-71.0747305],[42.3407142,-71.0747524],[42.3406613,-71.0747469],[42.3406323,-71.0747204],[42.3403344,-71.0743769],[42.340305,-71.074343],[42.3400865,-71.074063],[42.340031,-71.0739954]],
   aguadilla: [[42.3423955,-71.074592],[42.3423021,-71.0744849],[42.342149,-71.074294],[42.342033,-71.074145],[42.341976,-71.074073],[42.341947,-71.074063],[42.341905,-71.07408],[42.3418919,-71.0740945],[42.341845,-71.074146],[42.3415257,-71.0746338],[42.3414982,-71.0746758],[42.341473,-71.074713],[42.341425,-71.0747832],[42.34117,-71.075156],[42.341132,-71.075239],[42.341136,-71.075301],[42.34114,-71.075343],[42.341183,-71.075399],[42.341306,-71.075544],[42.3415767,-71.0758452],[42.3416674,-71.0759418]],
   eastBrookline: [[42.339615,-71.072504],[42.339508,-71.0723758],[42.3389892,-71.0717613],[42.3388607,-71.0716093],[42.3388262,-71.0715652],[42.3385665,-71.0712561],[42.3383857,-71.0710358],[42.3383656,-71.0710113],[42.338317,-71.0709521],[42.3382659,-71.0708916],[42.3369426,-71.0693236],[42.3367618,-71.0691084],[42.3366862,-71.069018]],
-  eastBerkeley: [[42.3439571,-71.0659884],[42.3440018,-71.0661266],[42.344045,-71.066254],[42.3440498,-71.0662681],[42.344115,-71.066461],[42.3442546,-71.0668673],[42.3442787,-71.0669423],[42.3442901,-71.0669774],[42.3443169,-71.0670567],[42.3443522,-71.0671597],[42.3446726,-71.0680628],[42.3449906,-71.0689715],[42.3450939,-71.0692731]],
+  eastBerkeley: [[42.343948,-71.065948],[42.343799,-71.065382],[42.343500,-71.064352],[42.342997,-71.062499]],
   lenox: [[42.3350615,-71.0787954],[42.3351044,-71.0788516],[42.3351505,-71.0789121],[42.3353574,-71.0792351],[42.3356426,-71.0796497],[42.3358819,-71.0799945],[42.3359029,-71.0800247],[42.335951,-71.0801],[42.3359887,-71.0801546],[42.3361739,-71.0804229],[42.336605,-71.0810476],[42.3375745,-71.0824526],[42.3376944,-71.0826337]]
 };
 
@@ -37,10 +39,12 @@ const ROADS = {
 // re-run `node tools/check-sides.mjs` after editing any path or this table.
 const EVEN_SIDE = {
   shawmut: 1,
+  shawmutPastMassAve: 1,
   rutland: -1,
   westNewton: -1,
   westConcord: -1,
   westDedham: -1,
+  westSpringfieldColumbus: -1,
   westSpringfield: -1,
   tremont: 1,
   washington: 1,
@@ -51,51 +55,78 @@ const EVEN_SIDE = {
   sanJuan: -1,
   aguadilla: 1,
   eastBrookline: 1,
-  eastBerkeley: -1,
+  eastBerkeley: 1,
   lenox: 1
 };
 
-function curb(id, street, road, side, segment, schedule, weekdays, ordinals, start, end) {
-  return { id, street, road, side, shortSide: `${side} side`, segment, schedule, weekdays, ordinals, start, end, path: ROADS[road] };
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+// The schedule text is generated from the same fields the tow logic uses, so
+// the words on screen can never disagree with the colors on the map.
+function scheduleLabel({ weekdays, ordinals, start, end }) {
+  const range = formatRange({ startMinutes: timeToMinutes(start), endMinutes: timeToMinutes(end) });
+  const days = weekdays.length === 7 ? "Every day" : weekdays.map((day) => DAY_NAMES[day]).join(" & ");
+  if (!ordinals) return `${weekdays.length === 7 ? days : `Every ${days}`} · ${range}`;
+  const nth = { 1: "1st", 2: "2nd", 3: "3rd", 4: "4th", 5: "5th" };
+  const list = ordinals.map((n) => nth[n]);
+  const joined = list.length > 1 ? `${list.slice(0, -1).join(", ")} & ${list.at(-1)}` : list[0];
+  return `${joined} ${days} · ${range}`;
 }
 
-// Weekday uses JS convention: Sunday 0 through Saturday 6. Schedules are the
-// City's daytime street-cleaning rules for these curb sides and street segments.
+// cityRows: the City of Boston street-sweeping schedule rows (main_id) this
+// curb represents. `node tools/check-schedules.mjs` checks every curb against
+// those rows in tools/city_sweeping_south_end.csv (City data, Oct 1 2026).
+// yearRound: the City row's year_round flag. Otherwise South End daytime
+// sweeping runs Mar 1 – Dec 31.
+function curb(id, street, road, side, segment, weekdays, ordinals, start, end, cityRows, yearRound = false) {
+  const rule = { weekdays, ordinals, start, end };
+  return { id, street, road, side, shortSide: `${side} side`, segment, schedule: scheduleLabel(rule), weekdays, ordinals, start, end, cityRows, yearRound, path: ROADS[road] };
+}
+
+const THU = [4];
+const ODD_WEEKS = [1, 3, 5];
+const EVEN_WEEKS = [2, 4];
+
+// Weekday uses JS convention: Sunday 0 through Saturday 6.
 const curbSegments = [
-  curb("shawmut-even", "Shawmut Ave", "shawmut", "Even-numbered", "West Dedham St → Massachusetts Ave", "Every Thursday · 12–4 PM", [4], null, "12:00", "16:00"),
-  curb("shawmut-odd", "Shawmut Ave", "shawmut", "Odd-numbered", "West Dedham St → Massachusetts Ave", "Every Friday · 8 AM–12 PM", [5], null, "08:00", "12:00"),
-  curb("rutland-even", "Rutland St", "rutland", "Even-numbered", "Shawmut Ave → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2,4], "08:00", "12:00"),
-  curb("rutland-odd", "Rutland St", "rutland", "Odd-numbered", "Shawmut Ave → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1,3,5], "08:00", "12:00"),
-  curb("newton-even", "West Newton St", "westNewton", "Even-numbered", "Shawmut Ave → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2,4], "08:00", "12:00"),
-  curb("newton-odd", "West Newton St", "westNewton", "Odd-numbered", "Shawmut Ave → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1,3,5], "08:00", "12:00"),
-  curb("concord-even", "West Concord St", "westConcord", "Even-numbered", "Shawmut Ave → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2,4], "08:00", "12:00"),
-  curb("concord-odd", "West Concord St", "westConcord", "Odd-numbered", "Shawmut Ave → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1,3,5], "08:00", "12:00"),
-  curb("dedham-even", "West Dedham St", "westDedham", "Even-numbered", "Tremont St → Washington St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2,4], "08:00", "12:00"),
-  curb("dedham-odd", "West Dedham St", "westDedham", "Odd-numbered", "Tremont St → Washington St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1,3,5], "08:00", "12:00"),
-  curb("springfield-even", "West Springfield St", "westSpringfield", "Even-numbered", "Tremont St → Washington St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2,4], "08:00", "12:00"),
-  curb("springfield-odd", "West Springfield St", "westSpringfield", "Odd-numbered", "Tremont St → Washington St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1,3,5], "08:00", "12:00"),
-  curb("tremont-even", "Tremont St", "tremont", "Even-numbered", "East Berkeley St → Massachusetts Ave", "Every Thursday · 5–7 AM", [4], null, "05:00", "07:00"),
-  curb("tremont-odd", "Tremont St", "tremont", "Odd-numbered", "East Berkeley St → Massachusetts Ave", "Every Monday · 5–7 AM", [1], null, "05:00", "07:00"),
-  curb("washington-even", "Washington St", "washington", "Even-numbered", "East Berkeley St → Massachusetts Ave", "Every Tuesday · 12–7 AM", [2], null, "00:01", "07:00"),
-  curb("washington-odd", "Washington St", "washington", "Odd-numbered", "East Berkeley St → Massachusetts Ave", "Every Wednesday · 12–7 AM", [3], null, "00:01", "07:00"),
-  curb("hanson-even", "Hanson St", "hanson", "Even-numbered", "Shawmut Ave → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2, 4], "08:00", "12:00"),
-  curb("hanson-odd", "Hanson St", "hanson", "Odd-numbered", "Shawmut Ave → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1, 3, 5], "08:00", "12:00"),
-  curb("milford-even", "Milford St", "milford", "Even-numbered", "Shawmut Ave → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2, 4], "08:00", "12:00"),
-  curb("milford-odd", "Milford St", "milford", "Odd-numbered", "Shawmut Ave → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1, 3, 5], "08:00", "12:00"),
-  curb("upton-even", "Upton St", "upton", "Even-numbered", "Shawmut Ave → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2, 4], "08:00", "12:00"),
-  curb("upton-odd", "Upton St", "upton", "Odd-numbered", "Shawmut Ave → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1, 3, 5], "08:00", "12:00"),
-  curb("dwight-even", "Dwight St", "dwight", "Even-numbered", "Shawmut Ave → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2, 4], "08:00", "12:00"),
-  curb("dwight-odd", "Dwight St", "dwight", "Odd-numbered", "Shawmut Ave → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1, 3, 5], "08:00", "12:00"),
-  curb("san-juan-even", "San Juan St", "sanJuan", "Even-numbered", "Shawmut Ave → Shawmut Ave", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2, 4], "08:00", "12:00"),
-  curb("san-juan-odd", "San Juan St", "sanJuan", "Odd-numbered", "Shawmut Ave → Shawmut Ave", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1, 3, 5], "08:00", "12:00"),
-  curb("aguadilla-even", "Aguadilla St", "aguadilla", "Even-numbered", "Tremont St → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2, 4], "08:00", "12:00"),
-  curb("aguadilla-odd", "Aguadilla St", "aguadilla", "Odd-numbered", "Tremont St → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1, 3, 5], "08:00", "12:00"),
-  curb("east-brookline-even", "East Brookline St", "eastBrookline", "Even-numbered", "Washington St → Albany St", "2nd & 4th Thursday · 12–4 PM", [4], [2, 4], "12:00", "16:00"),
-  curb("east-brookline-odd", "East Brookline St", "eastBrookline", "Odd-numbered", "Washington St → Albany St", "1st, 3rd & 5th Thursday · 12–4 PM", [4], [1, 3, 5], "12:00", "16:00"),
-  curb("east-berkeley-even", "East Berkeley St", "eastBerkeley", "Even-numbered", "Washington St → Albany St", "Every day · 12:01–7 AM", [0, 1, 2, 3, 4, 5, 6], null, "00:01", "07:00"),
-  curb("east-berkeley-odd", "East Berkeley St", "eastBerkeley", "Odd-numbered", "Washington St → Albany St", "Every day · 12:01–7 AM", [0, 1, 2, 3, 4, 5, 6], null, "00:01", "07:00"),
-  curb("lenox-even", "Lenox St", "lenox", "Even-numbered", "Washington St → Tremont St", "2nd & 4th Thursday · 8 AM–12 PM", [4], [2, 4], "08:00", "12:00"),
-  curb("lenox-odd", "Lenox St", "lenox", "Odd-numbered", "Washington St → Tremont St", "1st, 3rd & 5th Thursday · 8 AM–12 PM", [4], [1, 3, 5], "08:00", "12:00")
+  curb("shawmut-even", "Shawmut Ave", "shawmut", "Even-numbered", "West Dedham St → Massachusetts Ave", THU, null, "12:00", "16:00", [2331]),
+  curb("shawmut-odd", "Shawmut Ave", "shawmut", "Odd-numbered", "West Dedham St → Massachusetts Ave", [5], null, "08:00", "12:00", [2330]),
+  curb("shawmut-mass-even", "Shawmut Ave", "shawmutPastMassAve", "Even-numbered", "Massachusetts Ave → Lenox St", THU, EVEN_WEEKS, "08:00", "12:00", [2329]),
+  curb("shawmut-mass-odd", "Shawmut Ave", "shawmutPastMassAve", "Odd-numbered", "Massachusetts Ave → Lenox St", THU, ODD_WEEKS, "08:00", "12:00", [2332]),
+  curb("rutland-even", "Rutland St", "rutland", "Even-numbered", "Washington St → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [2251, 2249]),
+  curb("rutland-odd", "Rutland St", "rutland", "Odd-numbered", "Washington St → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [2252, 2250]),
+  curb("newton-even", "West Newton St", "westNewton", "Even-numbered", "Washington St → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [2746, 2745]),
+  curb("newton-odd", "West Newton St", "westNewton", "Odd-numbered", "Washington St → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [3249, 2748]),
+  curb("concord-even", "West Concord St", "westConcord", "Even-numbered", "Washington St → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [2788, 2785]),
+  curb("concord-odd", "West Concord St", "westConcord", "Odd-numbered", "Washington St → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [2789, 2786]),
+  curb("dedham-even", "West Dedham St", "westDedham", "Even-numbered", "Washington St → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [2791]),
+  curb("dedham-odd", "West Dedham St", "westDedham", "Odd-numbered", "Washington St → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [2790]),
+  curb("springfield-even", "West Springfield St", "westSpringfield", "Even-numbered", "Washington St → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [2766]),
+  curb("springfield-odd", "West Springfield St", "westSpringfield", "Odd-numbered", "Washington St → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [2767]),
+  curb("springfield-columbus-even", "West Springfield St", "westSpringfieldColumbus", "Even-numbered", "Tremont St → Columbus Ave", [3], EVEN_WEEKS, "08:00", "12:00", [2764]),
+  curb("springfield-columbus-odd", "West Springfield St", "westSpringfieldColumbus", "Odd-numbered", "Tremont St → Columbus Ave", [3], ODD_WEEKS, "08:00", "12:00", [2765]),
+  curb("tremont-even", "Tremont St", "tremont", "Even-numbered", "Berkeley St → Massachusetts Ave", THU, null, "05:00", "07:00", [3217], true),
+  curb("tremont-odd", "Tremont St", "tremont", "Odd-numbered", "Berkeley St → Massachusetts Ave", [1], null, "05:00", "07:00", [2242], true),
+  curb("washington-even", "Washington St", "washington", "Even-numbered", "East Berkeley St → Massachusetts Ave", [2], null, "00:00", "07:00", [2686], true),
+  curb("washington-odd", "Washington St", "washington", "Odd-numbered", "East Berkeley St → Massachusetts Ave", [3], null, "00:00", "07:00", [3676], true),
+  curb("hanson-even", "Hanson St", "hanson", "Even-numbered", "Shawmut Ave → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [1247]),
+  curb("hanson-odd", "Hanson St", "hanson", "Odd-numbered", "Shawmut Ave → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [1248]),
+  curb("milford-even", "Milford St", "milford", "Even-numbered", "Shawmut Ave → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [1786]),
+  curb("milford-odd", "Milford St", "milford", "Odd-numbered", "Shawmut Ave → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [1787]),
+  curb("upton-even", "Upton St", "upton", "Even-numbered", "Shawmut Ave → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [2212]),
+  curb("upton-odd", "Upton St", "upton", "Odd-numbered", "Shawmut Ave → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [2549]),
+  curb("dwight-even", "Dwight St", "dwight", "Even-numbered", "Shawmut Ave → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [1373]),
+  curb("dwight-odd", "Dwight St", "dwight", "Odd-numbered", "Shawmut Ave → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [991]),
+  curb("san-juan-even", "San Juan St", "sanJuan", "Even-numbered", "Shawmut Ave → Shawmut Ave", THU, EVEN_WEEKS, "08:00", "12:00", [2266]),
+  curb("san-juan-odd", "San Juan St", "sanJuan", "Odd-numbered", "Shawmut Ave → Shawmut Ave", THU, ODD_WEEKS, "08:00", "12:00", [2267]),
+  curb("aguadilla-even", "Aguadilla St", "aguadilla", "Even-numbered", "Tremont St → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [523]),
+  curb("aguadilla-odd", "Aguadilla St", "aguadilla", "Odd-numbered", "Tremont St → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [2469]),
+  curb("east-brookline-even", "East Brookline St", "eastBrookline", "Even-numbered", "Washington St → Albany St", THU, EVEN_WEEKS, "12:00", "16:00", [923]),
+  curb("east-brookline-odd", "East Brookline St", "eastBrookline", "Odd-numbered", "Washington St → Albany St", THU, ODD_WEEKS, "12:00", "16:00", [681]),
+  curb("east-berkeley-even", "East Berkeley St", "eastBerkeley", "Even-numbered", "Washington St → Albany St", [0, 1, 2, 3, 4, 5, 6], null, "00:01", "07:00", [1029, 1094], true),
+  curb("east-berkeley-odd", "East Berkeley St", "eastBerkeley", "Odd-numbered", "Washington St → Albany St", [0, 1, 2, 3, 4, 5, 6], null, "00:01", "07:00", [1029, 1094], true),
+  curb("lenox-even", "Lenox St", "lenox", "Even-numbered", "Washington St → Tremont St", THU, EVEN_WEEKS, "08:00", "12:00", [3779]),
+  curb("lenox-odd", "Lenox St", "lenox", "Odd-numbered", "Washington St → Tremont St", THU, ODD_WEEKS, "08:00", "12:00", [3780])
 ];
 
 const state = {
@@ -138,10 +169,11 @@ function weekday(parts) { return dayDate(parts).getUTCDay(); }
 function minutesOfDay(parts) { return parts.hour * 60 + parts.minute; }
 function timeToMinutes(value) { const [hour, minute] = value.split(":").map(Number); return hour * 60 + minute; }
 function ordinalInMonth(parts) { return Math.floor((parts.day - 1) / 7) + 1; }
-function daylightSeason(parts) { return parts.month >= 3 && parts.month <= 12; }
+// South End daytime sweeping: Mar 1 – Dec 31. Year-round City rows ignore the season.
+function inSweepingSeason(curbSide, parts) { return curbSide.yearRound || (parts.month >= 3 && parts.month <= 12); }
 
 function isScheduledOn(curbSide, parts) {
-  return daylightSeason(parts) && curbSide.weekdays.includes(weekday(parts)) && (!curbSide.ordinals || curbSide.ordinals.includes(ordinalInMonth(parts)));
+  return inSweepingSeason(curbSide, parts) && curbSide.weekdays.includes(weekday(parts)) && (!curbSide.ordinals || curbSide.ordinals.includes(ordinalInMonth(parts)));
 }
 
 function addDays(parts, amount) {
