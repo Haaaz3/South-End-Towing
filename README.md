@@ -23,6 +23,22 @@ Run `node tools/check-sides.mjs` after any change to road geometry, `EVEN_SIDE`,
 - that every verified address in `tools/city_addresses.json` sits beside the curb line of its own parity
 - the Oct 1, 2026 tow at 45 Rutland St (posted sign: 1st, 3rd & 5th Thursday, 8 AM–noon)
 
+## Your car and tow alerts
+
+Tap **Mark my car**, drag the pin onto the curb you parked on, and tap **Park here**. The pin snaps to the nearest mapped curb within 30 m. GPS can't reliably tell which side of the street you're on, so the card always offers a one-tap switch to the other side. The car is remembered on that phone only.
+
+**Turn on tow alerts** sends a push notification 12 hours before the next two tow windows for that curb, 1 hour before, and when each starts. **I moved my car** cancels them all.
+
+How it works: the app computes the alert times and sends them to `/api/car`, which stores them in Upstash Redis and schedules each one with Upstash QStash. At the right time QStash calls `/api/deliver`, which checks QStash's signature and sends the Web Push. QStash's free plan delays at most 7 days, so alerts further out go through a "relay" message that schedules them nearer the time. All the logic is in `lib/alerts-core.js` and is tested by `tools/test-alerts.mjs`.
+
+### Setup (one time, about 5 minutes)
+
+1. In Vercel, open the project, go to **Storage**, and add **Upstash → Redis** (free) and **Upstash → QStash** (free). Connect both to this project, so their environment variables are added automatically.
+2. In **Settings → Environment Variables**, add `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`. Generate a pair with `npx web-push generate-vapid-keys`, and keep the private key secret. Optionally add `VAPID_SUBJECT`, a `mailto:` address or the site's URL.
+3. Redeploy. `https://<your-site>/api/config` should then show `"pushReady": true`.
+
+On iPhone, web push works only from the Home Screen app (iOS 16.4 or later). Open the site in Safari, tap Share → **Add to Home Screen**, open Curbwise from the Home Screen, and turn on alerts there. Alerts are delivered to the production URL; Vercel preview deployments behind Vercel login can't receive QStash calls.
+
 ## Data and safety
 
 Schedules come from the City of Boston Street Sweeping Schedules data (data.boston.gov), checked against it on Oct 1, 2026. Blue dots are live from the City's public parking-meter data and only show active spaces whose published policy specifies a 120-minute maximum. They are deliberately separate from the colored street-cleaning curbs: a meter is not a resident-parking designation. On a public HTTPS site, the app asks each visitor's phone for location permission on first open, then places their own live blue position marker. Coordinates are used only in that browser and are never sent to or stored by this app. The app intentionally keeps an always-visible notice that posted signs take precedence: temporary permits, holidays, weather, construction, snow emergencies, and resident-permit rules can change whether a spot is actually legal.

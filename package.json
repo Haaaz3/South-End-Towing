@@ -1,0 +1,13 @@
+{
+  "name": "curbwise",
+  "private": true,
+  "type": "module",
+  "description": "South End street-cleaning tow map with parked-car tow alerts.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "check": "node tools/check-sides.mjs && node tools/check-schedules.mjs && node tools/test-alerts.mjs"
+  },
+  "dependencies": {
+    "web-push": "3.6.7"
+  }
+}

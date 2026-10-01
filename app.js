@@ -139,8 +139,21 @@ const state = {
   userMarker: null,
   accuracyCircle: null,
   userLocation: null,
-  saved: new Set(JSON.parse(localStorage.getItem("curbwise-saved") || "[]"))
+  saved: new Set(readStored("curbwise-saved", [])),
+  car: readStored("curbwise-car", null),
+  placing: false,
+  carMarker: null,
+  pushConfig: null,
+  alertMessage: ""
 };
+
+// Storage can be unavailable (private mode, blocked site data); never let that break the app.
+function readStored(key, fallback) {
+  try { const value = localStorage.getItem(key); return value ? JSON.parse(value) : fallback; } catch { return fallback; }
+}
+function writeStored(key, value) {
+  try { value == null ? localStorage.removeItem(key) : localStorage.setItem(key, JSON.stringify(value)); } catch { /* not persisted */ }
+}
 
 const element = (selector) => document.querySelector(selector);
 const selectedCurb = () => curbSegments.find((curbSide) => curbSide.id === state.selectedId) || curbSegments[0];
@@ -438,7 +451,7 @@ function renderTime() {
   element("#parking-time").value = partsToInputValue(time);
 }
 
-function render() { renderTime(); renderMap(); renderSelection(); renderNearby(); }
+function render() { renderTime(); renderMap(); renderSelection(); renderNearby(); renderCar(); }
 
 function updateUserLocation(position) {
   const { latitude, longitude, accuracy } = position.coords;
@@ -480,7 +493,7 @@ function bindEvents() {
   element("#save-button").addEventListener("click", () => {
     const id = selectedCurb().id;
     state.saved.has(id) ? state.saved.delete(id) : state.saved.add(id);
-    localStorage.setItem("curbwise-saved", JSON.stringify([...state.saved]));
+    writeStored("curbwise-saved", [...state.saved]);
     renderSelection();
   });
   element("#location-button").addEventListener("click", requestLocation);
@@ -515,8 +528,363 @@ function registerServiceWorker() {
   });
 }
 
+// ---------------------------------------------------------------------------
+// Your car: mark where you parked, see that curb's tow window, get push alerts.
+// The pin snaps to the nearest curb line. GPS can't reliably tell which side
+// of the street you're on, so the card always offers "switch to the other side".
+
+const SNAP_METERS = 30;
+const ALERT_LEADS = [
+  { before: 12 * 60, kind: "evening" },
+  { before: 60, kind: "hour" },
+  { before: 0, kind: "start" }
+];
+const curbGeometry = new Map(curbSegments.map((curbSide) => [curbSide.id, offsetPath(curbSide.path, curbSide.side, curbSide.road)]));
+
+function metersBetween(lat, lng, path) {
+  const scaleX = 111320 * Math.cos(lat * Math.PI / 180);
+  const scaleY = 110540;
+  let best = Infinity;
+  for (let i = 0; i < path.length - 1; i += 1) {
+    const ax = (path[i][1] - lng) * scaleX, ay = (path[i][0] - lat) * scaleY;
+    const bx = (path[i + 1][1] - lng) * scaleX, by = (path[i + 1][0] - lat) * scaleY;
+    const dx = bx - ax, dy = by - ay;
+    const t = Math.max(0, Math.min(1, -(ax * dx + ay * dy) / (dx * dx + dy * dy || 1)));
+    best = Math.min(best, Math.hypot(ax + t * dx, ay + t * dy));
+  }
+  return best;
+}
+
+function nearestCurb(lat, lng) {
+  let best = null;
+  curbGeometry.forEach((path, id) => {
+    const distance = metersBetween(lat, lng, path);
+    if (!best || distance < best.distance) best = { id, distance };
+  });
+  return best && best.distance <= SNAP_METERS ? best.id : null;
+}
+
+const oppositeSide = (id) => id.endsWith("-even") ? id.replace(/-even$/, "-odd") : id.replace(/-odd$/, "-even");
+const carCurb = () => curbSegments.find((curbSide) => curbSide.id === state.car?.curbId) || null;
+
+// Boston wall-clock time -> real instant, handling daylight saving.
+function bostonToEpoch(parts, minutes) {
+  const wanted = Date.UTC(parts.year, parts.month - 1, parts.day, 0, minutes);
+  let instant = wanted;
+  for (let i = 0; i < 3; i += 1) {
+    const shown = partsInBoston(new Date(instant));
+    instant += wanted - Date.UTC(shown.year, shown.month - 1, shown.day, shown.hour, shown.minute);
+  }
+  return instant;
+}
+
+function upcomingWindows(curbSide, count) {
+  const windows = [];
+  let from = partsInBoston();
+  for (let i = 0; i < count; i += 1) {
+    const next = nextWindow(curbSide, from);
+    if (!next) break;
+    windows.push({ ...next, start: bostonToEpoch(next, next.startMinutes), end: bostonToEpoch(next, next.endMinutes) });
+    from = addDays(next, 1);
+  }
+  return windows;
+}
+
+function buildAlerts(curbSide, now = Date.now()) {
+  const where = `${curbSide.street}, ${curbSide.side.split("-")[0].toLowerCase()} side`;
+  const alerts = [];
+  for (const window of upcomingWindows(curbSide, 2)) {
+    const when = formatWindow(window);
+    const until = formatTime(window.endMinutes);
+    for (const lead of ALERT_LEADS) {
+      const at = window.start - lead.before * 60000;
+      if (at <= now + 60000) continue;
+      const text = {
+        evening: { title: "Move your car before the tow window", body: `${where}: no parking ${when}. Cars are towed.` },
+        hour: { title: "Tow window starts in 1 hour", body: `${where}: no parking ${when}. Move your car now.` },
+        start: { title: "Tow window has started", body: `Your car on ${where} can be towed until ${until}. Move it now.` }
+      }[lead.kind];
+      alerts.push({ at, ...text, tag: `curbwise-${window.year}${window.month}${window.day}` });
+    }
+  }
+  return alerts;
+}
+
+function carIcon(placing) {
+  return L.divIcon({
+    className: `car-marker${placing ? " is-placing" : ""}`,
+    html: "<span aria-hidden='true'><svg viewBox='0 0 24 24'><path d='M5 11l1.6-4.2A2 2 0 0 1 8.5 5.5h7a2 2 0 0 1 1.9 1.3L19 11m-14 0h14m-14 0a2 2 0 0 0-2 2v3h2m14-5a2 2 0 0 1 2 2v3h-2M5 16v2m14-2v2M5 16h14' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg></span>",
+    iconSize: [40, 40],
+    iconAnchor: [20, 36]
+  });
+}
+
+function showCarMarker(latLng, placing) {
+  if (!state.map) return;
+  if (!state.carMarker) {
+    state.carMarker = L.marker(latLng, { icon: carIcon(placing), draggable: placing, zIndexOffset: 1000, keyboard: true, title: "Your car" }).addTo(state.map);
+  } else {
+    state.carMarker.setLatLng(latLng);
+    state.carMarker.setIcon(carIcon(placing));
+  }
+  if (placing) state.carMarker.dragging?.enable(); else state.carMarker.dragging?.disable();
+}
+
+function startPlacing() {
+  if (!state.map) { setCarMessage("The map didn't load, so the car pin can't be placed. Check your connection and refresh."); return; }
+  state.placing = true;
+  const start = state.carMarker?.getLatLng() || (state.userLocation ? L.latLng(state.userLocation) : state.map.getCenter());
+  showCarMarker(start, true);
+  state.map.flyTo(start, Math.max(state.map.getZoom(), 18), { duration: 0.5 });
+  renderCar();
+}
+
+function cancelPlacing() {
+  state.placing = false;
+  if (state.car) showCarMarker([state.car.lat, state.car.lng], false);
+  else if (state.carMarker) { state.map.removeLayer(state.carMarker); state.carMarker = null; }
+  renderCar();
+}
+
+function newCarId() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function parkHere() {
+  const { lat, lng } = state.carMarker.getLatLng();
+  const previous = state.car;
+  state.car = { id: previous?.id || newCarId(), lat, lng, curbId: nearestCurb(lat, lng), markedAt: Date.now(), alerts: previous?.alerts || false };
+  state.placing = false;
+  showCarMarker([lat, lng], false);
+  if (state.car.curbId) state.selectedId = state.car.curbId;
+  writeStored("curbwise-car", state.car);
+  render();
+  warnNowIfTowing();
+  syncAlerts();
+}
+
+function switchSide() {
+  if (!state.car?.curbId) return;
+  state.car.curbId = oppositeSide(state.car.curbId);
+  state.selectedId = state.car.curbId;
+  writeStored("curbwise-car", state.car);
+  render();
+  warnNowIfTowing();
+  syncAlerts();
+}
+
+async function clearCar() {
+  const car = state.car;
+  state.car = null;
+  state.placing = false;
+  writeStored("curbwise-car", null);
+  if (state.carMarker) { state.map.removeLayer(state.carMarker); state.carMarker = null; }
+  state.alertMessage = "";
+  render();
+  if (car?.alerts) await callAlertsApi("DELETE", { carId: car.id }).catch(() => {});
+}
+
+function restoreCar() {
+  if (!state.car) return;
+  if (!curbSegments.some((curbSide) => curbSide.id === state.car.curbId)) state.car.curbId = nearestCurb(state.car.lat, state.car.lng);
+  showCarMarker([state.car.lat, state.car.lng], false);
+  // Re-sync on every open: refreshes the plan for upcoming windows and picks up
+  // a renewed push subscription.
+  syncAlerts();
+}
+
+function setCarMessage(message) {
+  state.alertMessage = message;
+  renderCar();
+}
+
+// ---- Push alerts ----------------------------------------------------------
+
+const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isStandalone = () => window.matchMedia?.("(display-mode: standalone)").matches || navigator.standalone === true;
+const pushSupported = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+
+function loadPushConfig() {
+  if (window.location.protocol === "file:") return;
+  fetch("./api/config", { cache: "no-store" })
+    .then((response) => response.ok ? response.json() : null)
+    .then((config) => { state.pushConfig = config || { pushReady: false }; renderCar(); })
+    .catch(() => { state.pushConfig = { pushReady: false }; renderCar(); });
+}
+
+function base64UrlToBytes(value) {
+  const padded = (value + "=".repeat((4 - value.length % 4) % 4)).replace(/-/g, "+").replace(/_/g, "/");
+  return Uint8Array.from(atob(padded), (char) => char.charCodeAt(0));
+}
+
+async function callAlertsApi(method, body) {
+  const response = await fetch("./api/car", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "The alert service didn't respond.");
+  return data;
+}
+
+async function turnOnAlerts() {
+  if (!state.car?.curbId) return;
+  if (!pushSupported()) {
+    setCarMessage(isIos() && !isStandalone()
+      ? "On iPhone, alerts only work from the Home Screen app: tap Share, then Add to Home Screen, then open Curbwise from your Home Screen and turn alerts on there."
+      : "This browser can't receive push notifications. Try Safari on iPhone (from the Home Screen) or Chrome.");
+    return;
+  }
+  if (state.pushConfig && !state.pushConfig.pushReady) {
+    setCarMessage("Tow alerts aren't switched on for this site yet. The site owner needs to finish the alert setup.");
+    return;
+  }
+  // Ask first, inside the tap: iPhone only shows the prompt for a direct user action.
+  const permission = await Notification.requestPermission();
+  if (permission !== "granted") {
+    setCarMessage("Notifications are off for Curbwise. Allow them in your phone's Settings, then try again.");
+    return;
+  }
+  try {
+    if (!state.pushConfig?.vapidPublicKey) state.pushConfig = await fetch("./api/config", { cache: "no-store" }).then((r) => r.json());
+    if (!state.pushConfig.pushReady) throw new Error("Tow alerts aren't switched on for this site yet.");
+    const registration = await navigator.serviceWorker.register("./sw.js").then(() => navigator.serviceWorker.ready);
+    const subscription = await registration.pushManager.getSubscription()
+      || await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64UrlToBytes(state.pushConfig.vapidPublicKey) });
+    state.car.alerts = true;
+    writeStored("curbwise-car", state.car);
+    await syncAlerts(subscription);
+    warnNowIfTowing();
+  } catch (error) {
+    setCarMessage(`Alerts couldn't be turned on: ${error.message}`);
+  }
+}
+
+async function turnOffAlerts() {
+  if (!state.car) return;
+  state.car.alerts = false;
+  writeStored("curbwise-car", state.car);
+  setCarMessage("Tow alerts are off for this car.");
+  await callAlertsApi("DELETE", { carId: state.car.id }).catch(() => {});
+}
+
+async function syncAlerts(subscription) {
+  const car = state.car;
+  if (!car?.alerts || !pushSupported()) { renderCar(); return; }
+  const curbSide = carCurb();
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const current = subscription || await registration.pushManager.getSubscription();
+    if (!current) {
+      car.alerts = false;
+      writeStored("curbwise-car", car);
+      setCarMessage("This phone stopped accepting Curbwise notifications. Turn alerts on again.");
+      return;
+    }
+    const alerts = curbSide ? buildAlerts(curbSide) : [];
+    if (!alerts.length) {
+      await callAlertsApi("DELETE", { carId: car.id });
+      setCarMessage(curbSide ? "No upcoming tow window to alert you about." : "This spot isn't on a mapped curb, so there's nothing to alert. Check the posted sign.");
+      return;
+    }
+    await callAlertsApi("POST", { carId: car.id, subscription: current.toJSON(), alerts });
+    const first = new Date(alerts[0].at);
+    const firstText = new Intl.DateTimeFormat("en-US", { timeZone: BOSTON_TIME_ZONE, weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(first);
+    setCarMessage(`Tow alerts on: ${alerts.length} scheduled, first on ${firstText}. You'll get one 12 hours before, 1 hour before, and when the window starts.`);
+  } catch (error) {
+    setCarMessage(`Alerts couldn't be scheduled: ${error.message} They'll retry next time you open the app.`);
+  }
+}
+
+// If the spot is already in (or about to enter) a tow window, say so right away.
+function warnNowIfTowing() {
+  const curbSide = carCurb();
+  if (!curbSide) return;
+  const status = statusFor(curbSide, partsInBoston());
+  if (!["active", "ending", "urgent"].includes(status.type)) return;
+  const title = status.type === "urgent" ? "Tow window starts soon" : "Tow window is active here";
+  const body = status.type === "urgent"
+    ? `${curbSide.street}, ${curbSide.side.split("-")[0].toLowerCase()} side: no parking ${formatWindow(status.next)} (${timeUntil(status.next.minutesAway)}).`
+    : `${curbSide.street}, ${curbSide.side.split("-")[0].toLowerCase()} side: cars can be towed until ${formatTime(status.next.endMinutes)}. Move your car now.`;
+  if (state.car?.alerts && "Notification" in window && Notification.permission === "granted" && "serviceWorker" in navigator) {
+    navigator.serviceWorker.ready.then((registration) => registration.showNotification(title, { body, tag: "curbwise-now", icon: "./icons/curbwise-192.png" })).catch(() => {});
+  }
+}
+
+// ---- Rendering ------------------------------------------------------------
+
+function renderCar() {
+  const placing = state.placing;
+  const car = state.car;
+  element("#car-empty").hidden = Boolean(car) || placing;
+  element("#car-placing").hidden = !placing;
+  element("#car-parked").hidden = !car || placing;
+  element("#map-car-label").textContent = placing ? "Placing car…" : car ? "Your car" : "Mark my car";
+  element("#car-card").className = "car-card";
+  if (!car || placing) return;
+
+  const curbSide = carCurb();
+  const warning = element("#car-warning");
+  if (!curbSide) {
+    element("#car-street").textContent = "Not on a mapped curb";
+    element("#car-segment").textContent = "This spot is more than 30 m from the curbs Curbwise covers. Check the posted sign, or move the pin.";
+    element("#car-status").hidden = true;
+    element("#car-next").textContent = "—";
+    element("#car-countdown").textContent = "";
+    element("#car-switch-button").parentElement.hidden = true;
+    element("#car-alert-button").hidden = true;
+    element("#car-alert-text").textContent = state.alertMessage;
+    warning.hidden = true;
+    return;
+  }
+  const status = statusFor(curbSide, partsInBoston());
+  element("#car-street").textContent = `${curbSide.street} · ${curbSide.shortSide.toLowerCase()}`;
+  element("#car-segment").textContent = `${curbSide.segment} · ${curbSide.schedule}`;
+  const statusBox = element("#car-status");
+  statusBox.hidden = false;
+  statusBox.textContent = status.label;
+  statusBox.className = `status-row status-${status.type}`;
+  element("#car-next").textContent = formatWindow(status.next);
+  element("#car-countdown").textContent = windowCountdown(status.next);
+  element("#car-switch-button").textContent = `switch to the ${curbSide.side.startsWith("Even") ? "odd" : "even"}-numbered side`;
+  element("#car-switch-button").parentElement.hidden = false;
+
+  const danger = status.type === "active" || status.type === "ending";
+  element("#car-card").className = `car-card${danger ? " is-danger" : status.type === "urgent" ? " is-warning" : ""}`;
+  warning.hidden = !(danger || status.type === "urgent");
+  warning.textContent = danger
+    ? `Move your car now. This curb is a tow zone until ${formatTime(status.next.endMinutes)} today.`
+    : status.type === "urgent" ? `Move your car before ${formatTime(status.next.startMinutes)}: the tow window starts ${timeUntil(status.next.minutesAway)}.` : "";
+
+  const alertButton = element("#car-alert-button");
+  alertButton.hidden = false;
+  alertButton.textContent = car.alerts ? "Turn off alerts" : "Turn on tow alerts";
+  alertButton.className = `button ${car.alerts ? "button-secondary" : "button-primary"}`;
+  element("#car-alert-text").textContent = state.alertMessage
+    || (car.alerts ? "Tow alerts are on for this car." : "Get a push notification 12 hours before, 1 hour before, and when the tow window starts.");
+}
+
+function bindCarEvents() {
+  element("#car-mark-button").addEventListener("click", startPlacing);
+  element("#map-car-button").addEventListener("click", () => {
+    if (state.placing) return;
+    if (state.car && state.map) {
+      state.map.flyTo([state.car.lat, state.car.lng], Math.max(state.map.getZoom(), 18), { duration: 0.5 });
+      element("#car-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else startPlacing();
+  });
+  element("#car-park-button").addEventListener("click", parkHere);
+  element("#car-cancel-button").addEventListener("click", cancelPlacing);
+  element("#car-move-button").addEventListener("click", startPlacing);
+  element("#car-switch-button").addEventListener("click", switchSide);
+  element("#car-clear-button").addEventListener("click", clearCar);
+  element("#car-alert-button").addEventListener("click", () => (state.car?.alerts ? turnOffAlerts() : turnOnAlerts()));
+  if (state.map) state.map.on("click", (event) => { if (state.placing) showCarMarker(event.latlng, true); });
+  loadPushConfig();
+}
+
 initMap();
 bindEvents();
+bindCarEvents();
+restoreCar();
 render();
 requestInitialLocation();
 registerServiceWorker();

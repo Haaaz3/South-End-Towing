@@ -445,3 +445,79 @@ a { color: inherit; }
   white-space: nowrap;
   border: 0;
 }
+
+/* ---- Your car ---------------------------------------------------------- */
+.button-primary { color: #fff; background: var(--accent); border-color: var(--accent); }
+.button-primary:hover { background: #0a6355; }
+.link-button { padding: 0; border: 0; color: var(--accent); background: none; font: inherit; font-weight: 750; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.link-button:focus-visible { outline: 3px solid rgba(12, 116, 100, 0.36); outline-offset: 2px; border-radius: 3px; }
+
+.car-card {
+  display: grid;
+  gap: 2px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f7faf6;
+}
+.car-card.is-warning { border-color: #f1c39a; background: #fff7ef; }
+.car-card.is-danger { border-color: #e7a7a1; background: #fdf1f0; box-shadow: inset 4px 0 0 var(--active); }
+.car-card h2 { font-size: 19px; line-height: 1.25; }
+.car-card .status-row { width: fit-content; }
+.car-lead { margin: 2px 0 12px; color: var(--muted); font-size: 13px; }
+.car-lead strong { color: var(--ink); }
+.car-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.car-actions .button { flex: 1 1 auto; }
+.car-warning {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--active);
+  font-size: 13px;
+  font-weight: 800;
+}
+.car-card.is-warning .car-warning { background: var(--urgent); }
+.car-side-check { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
+.car-alerts { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.car-alert-text { margin: 0; color: var(--ink); font-size: 12px; font-weight: 600; }
+
+.map-car-button {
+  position: absolute;
+  z-index: 500;
+  top: 18px;
+  left: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 14px 0 11px;
+  border: 0;
+  border-radius: 99px;
+  color: #fff;
+  background: var(--ink);
+  box-shadow: 0 8px 22px rgba(16, 35, 31, 0.28);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.map-car-button svg { width: 20px; height: 20px; }
+.map-car-button:focus-visible { outline: 3px solid rgba(12, 116, 100, 0.5); outline-offset: 2px; }
+
+.car-marker span {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 4px;
+  color: #fff;
+  background: var(--ink);
+  box-shadow: 0 5px 14px rgba(16, 35, 31, .45);
+  transform: rotate(-45deg);
+}
+.car-marker span svg { width: 21px; height: 21px; transform: rotate(45deg); }
+.car-marker.is-placing span { background: var(--accent); animation: car-pulse 1.4s ease-in-out infinite; }
+@keyframes car-pulse { 50% { box-shadow: 0 0 0 9px rgba(12, 116, 100, .22), 0 5px 14px rgba(16, 35, 31, .45); } }
+@media (prefers-reduced-motion: reduce) { .car-marker.is-placing span { animation: none; } }
+@media (max-width: 640px) { .map-car-button { top: 15px; left: 15px; } }
