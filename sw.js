@@ -1,4 +1,7 @@
-const SHELL_CACHE = "curbwise-shell-v8";
+// Bump SHELL_CACHE whenever shell files change. Same-origin requests are
+// network-first so a deploy (e.g. corrected tow schedules) reaches phones on
+// the next open; the cache is only a fallback for when there is no signal.
+const SHELL_CACHE = "curbwise-shell-v9";
 const SHELL_FILES = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest", "./icons/curbwise.svg"];
 
 self.addEventListener("install", (event) => {
@@ -10,10 +13,13 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
-  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-    const copy = response.clone();
-    caches.open(SHELL_CACHE).then((cache) => cache.put(event.request, copy));
+  const url = new URL(event.request.url);
+  if (event.request.method !== "GET" || url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
+  event.respondWith(fetch(event.request).then((response) => {
+    if (response.ok) {
+      const copy = response.clone();
+      caches.open(SHELL_CACHE).then((cache) => cache.put(event.request, copy));
+    }
     return response;
-  })));
+  }).catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html"))));
 });
